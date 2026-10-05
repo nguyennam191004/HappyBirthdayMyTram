@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật Mỹ Trâm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        /* --- CẤU HÌNH CƠ BẢN --- */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Great Vibes', cursive;
+            cursor: none;
+        }
+
+        #overlay {
+            cursor: default;
+        }
+
+        /* --- VIDEO NỀN --- */
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+        }
+
+        /* --- MÀN HÌNH CHỜ --- */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 1s ease;
+        }
+
+        /* --- BỨC THƯ (KÍCH THƯỚC 520x340) --- */
+        #start-btn {
+            position: relative;
+            width: 520px;
+            height: 330px;
+            background: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s ease;
+            perspective: 1500px;
+            padding: 0;
+        }
+
+        /* Nắp phong bì */
+        #start-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 260px solid transparent;
+            border-right: 260px solid transparent;
+            border-top: 200px solid #f9f9f9;
+            z-index: 5;
+            transform-origin: top;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.1));
+        }
+
+        /* CHỮ TRÊN THƯ - Đã chỉnh để dịch xuống dưới */
+        #start-btn::after {
+            content: "Thiệp chúc mừng sinh nhật Thu Trang";
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: #d60000;
+            z-index: 2;
+            padding: 0 20px;
+            text-align: center;
+            /* Dịch chuyển chữ xuống dưới */
+            margin-top: 80px;
+        }
+
+        /* Hiệu ứng mở nắp */
+        #start-btn:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        #start-btn:hover::before {
+            transform: rotateX(150deg);
+            z-index: 1;
+        }
+
+        /* --- HIỆU ỨNG HẠT LẤP LÁNH --- */
+        .trail {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px #ffd700;
+            animation: sparkle 1s linear forwards;
+            z-index: 9999;
+        }
+
+        @keyframes sparkle {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(0, 20px) scale(0);
+            }
+        }
+
+        /* --- NỘI DUNG SAU KHI MỞ --- */
+        .scene {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 8rem;
+            margin: 0 0 10px 0;
+            color: #ff3333;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .year {
+            font-size: 4rem;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        #message-container {
+            font-size: 2.5rem;
+            line-height: 1.4;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px #000, 0 0 10px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .word {
+            display: inline-block;
+            margin-right: 10px;
+            opacity: 0;
+            transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1.5s ease;
+            will-change: transform, opacity;
+        }
+
+        .word.visible {
+            opacity: 1 !important;
+            transform: translate(0, 0) rotate(0deg) scale(1) !important;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            .year {
+                font-size: 2rem;
+            }
+
+            #message-container {
+                font-size: 1.8rem;
+            }
+
+            #start-btn {
+                width: 300px;
+                height: 200px;
+            }
+
+            #start-btn::before {
+                border-left-width: 150px;
+                border-right-width: 150px;
+                border-top-width: 120px;
+            }
+
+            #start-btn::after {
+                margin-top: 40px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="video_nen.mp4" type="video/mp4">
+    </video>
+
+    <audio id="audioPlayer" loop>
+        <source src="nhac_nen.mp3" type="audio/mp3">
+    </audio>
+
+    <div id="overlay">
+        <button id="start-btn"></button>
+        <p
+            style="color: white; margin-top: 25px; font-family: sans-serif; letter-spacing: 3px; font-size: 0.9rem; opacity: 0.5;">
+        </p>
+    </div>
+
+    <div class="scene" id="scene">
+        <div class="card" id="card">
+            <h1>Chúc Mừng Sinh Nhật</h1>
+            <div class="year">Happy BirthDay to Mỹ Trâm</div>
+            <div id="message-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const wishes = "Happy Birthday !!! Nhân dịp sinh nhật, em chúc chị tuổi mới luôn xinh đẹp, an yên và tràn đầy năng lượng tích cực. Mong mọi dự định, mục tiêu chị đang theo đuổi đều thuận lợi và thành công rực rỡ. Dù có khoảng cách địa lý, nếu có chuyện vui buồn cần người sẻ chia thì em vẫn luôn ở đây. Chúc chị một ngày sinh nhật thật trọn vẹn và nhiều niềm vui nhé!";
+
+        const startBtn = document.getElementById('start-btn');
+        const overlay = document.getElementById('overlay');
+        const video = document.getElementById('bg-video');
+        const audio = document.getElementById('audioPlayer');
+        const sceneContainer = document.getElementById('scene');
+        const container = document.getElementById('message-container');
+
+        startBtn.addEventListener('click', () => {
+            video.muted = false;
+            video.volume = 0.5;
+            video.play().catch(e => console.log("Lỗi video: ", e));
+            audio.volume = 1.0;
+            audio.play().catch(e => console.log("Lỗi audio: ", e));
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 1000);
+            sceneContainer.style.opacity = '1';
+            setTimeout(animateText, 500);
+        });
+
+        const words = wishes.split(' ');
+        words.forEach((word) => {
+            const span = document.createElement('span');
+            span.textContent = word;
+            span.className = 'word';
+            const randomX = Math.floor(Math.random() * 1000 - 500);
+            const randomY = Math.floor(Math.random() * 1000 - 500);
+            const randomRotate = Math.floor(Math.random() * 360 - 180);
+            span.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg) scale(3)`;
+            container.appendChild(span);
+        });
+
+        function animateText() {
+            document.querySelectorAll('.word').forEach((span, index) => {
+                setTimeout(() => {
+                    span.classList.add('visible');
+                }, index * 150);
+            });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            createTrail(e.pageX, e.pageY);
+        });
+
+        function createTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'trail';
+            const offsetX = (Math.random() - 0.5) * 10;
+            const offsetY = (Math.random() - 0.5) * 10;
+            trail.style.left = (x + offsetX) + 'px';
+            trail.style.top = (y + offsetY) + 'px';
+            const colors = ['#ffd700', '#ffffff', '#ffeb3b'];
+            trail.style.background = colors[Math.floor(Math.random() * colors.length)];
+            trail.style.boxShadow = `0 0 10px ${trail.style.background}`;
+            document.body.appendChild(trail);
+            setTimeout(() => { trail.remove(); }, 1000);
+        }
+    </script>
+</body>
+
+</html>
